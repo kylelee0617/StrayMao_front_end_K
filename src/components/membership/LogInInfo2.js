@@ -2,25 +2,24 @@ import React, { useState, useEffect } from 'react'
 import "../../styles/cart/orderlist.scss";
 
 function LogInInfo(props) {
-  // console.log("login props" , props)
   const [isLogin, setIsLogin] = useState(false) // login = true 表示有登入
-  const [loginAccount , setLoginAccount] = useState(localStorage.getItem("loginAccount") == null? null : JSON.parse(localStorage.getItem("loginAccount")));  //登入者資訊
-  console.log(loginAccount.memberName)
-  useEffect(() => {
-    // console.log("loginAccount")
-    if(loginAccount == null) props.history.push("/signInForm");
-    setIsLogin(true);
-    props.setMember(loginAccount);
-  },[loginAccount]);
 
+  const [loginAccount , setLoginAccount] = useState({});  //登入者資訊
   useEffect(() => {
-    // console.log("reload")
-    if(props.reload != null) setLoginAccount(localStorage.getItem("loginAccount") == null? null : JSON.parse(localStorage.getItem("loginAccount")));
-  }, [props.reload]);
+    let innerMember = localStorage.getItem("loginAccount") == null? null : JSON.parse(localStorage.getItem("loginAccount"));
+    if(innerMember == null) {
+      props.history.push("/signInForm");
+    }else {
+      setIsLogin(true);
+      setLoginAccount(innerMember);
+      props.setMember(innerMember);
+    }
+  } , [props.reload])
 
   async function doLogOut() {
     localStorage.removeItem("loginAccount");
     setIsLogin(false);
+    setLoginAccount(null);
     props.setMember(null);
     props.history.push("/signInForm");
   }

@@ -17,7 +17,7 @@ function MemberInfo(props) {
   useEffect(()=>{
     if(member.memberId != null) getMyMemberInfo();
   },[member]);
-  const history = useHistory();
+  const history = useHistory(); //history.go(0)可以重整畫面； history.go(-1) 回到上一頁
   const [reload , setReload] = useState(false);
 
   //form
@@ -88,7 +88,7 @@ function MemberInfo(props) {
         localStorage.setItem("loginAccount" , JSON.stringify({memberName , email , memberId: member.memberId}));
         setReload(!reload);
         // history.go(0);
-        alertConfirm({ type: 'confirm', content: "喵~ 會員資料已更新!!" })
+        alertConfirm({ type: 'alert', content: "喵~ 會員資料已更新!!" })
       } else if (rsObj.data.affectedRows === 0){
         alertConfirm({ type: 'alert', content: "喵嗚~ 會員密碼好像錯了唷!!!" })
       }
