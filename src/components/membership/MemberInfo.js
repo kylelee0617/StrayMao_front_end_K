@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter} from 'react-router-dom';
+import { useHistory } from 'react-router'
 
 //user used
 import "react-alert-confirm/dist/index.css";
@@ -16,6 +17,8 @@ function MemberInfo(props) {
   useEffect(()=>{
     if(member.memberId != null) getMyMemberInfo();
   },[member]);
+  const history = useHistory();
+  const [reload , setReload] = useState(false);
 
   //form
   const [memberName , setMemberName] = useState("");
@@ -82,7 +85,10 @@ function MemberInfo(props) {
     const rsObj = await response.json();  //轉成物件
     if(rsObj.success) {
       if(rsObj.data.changedRows === 1) {
-        alertConfirm({ type: 'alert', content: "喵~ 會員資料已更新!!" })
+        localStorage.setItem("loginAccount" , JSON.stringify({memberName , email , memberId: member.memberId}));
+        setReload(!reload);
+        // history.go(0);
+        alertConfirm({ type: 'confirm', content: "喵~ 會員資料已更新!!" })
       } else if (rsObj.data.affectedRows === 0){
         alertConfirm({ type: 'alert', content: "喵嗚~ 會員密碼好像錯了唷!!!" })
       }
@@ -91,10 +97,10 @@ function MemberInfo(props) {
     }
   }
 
-
 return(
 <>
   <LogInInfo
+    reload = {reload}
     setMember = {setMember}
     history = {props.history}
   />
